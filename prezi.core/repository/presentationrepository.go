@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"infra-balaji-rao/prezi/model"
+	"infra-balaji-rao/prezi.core/model"
 )
 
 type PresentationRepository struct {
