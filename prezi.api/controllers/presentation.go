@@ -11,7 +11,7 @@ type PresentationController struct {
 }
 
 func (presentationController *PresentationController) Get() {
-	presentationService := service.PresentationService{}
+	presentationService := service.NewPresentationService()
 
 	presentations, _ := presentationService.Get(request.PresentationRequest{})
 
