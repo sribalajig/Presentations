@@ -11,20 +11,39 @@ type PresentationController struct {
 }
 
 func (presentationController *PresentationController) Get() {
-	presentationService := service.NewPresentationService()
-
-	presentations, _ := presentationService.Get(request.Request{
-		PaginationOption: &request.PaginationOption{
-			Index:         25,
-			NumberOfItems: 35,
-		},
-		SortingOption: &request.SortingOption{
-			Field:     "title",
-			Direction: request.Asc,
-		},
-	})
+	presentations, _ := service.NewPresentationService().Get(
+		presentationController.generateRequest())
 
 	presentationController.Data["json"] = presentations
 
 	presentationController.ServeJSON()
+}
+
+func (presentationController *PresentationController) generateRequest() request.Request {
+	presentationRequest := request.Request{}
+
+	paginate, _ := presentationController.GetBool("paginate")
+
+	if paginate {
+		index, _ := presentationController.GetInt("index")
+		numberOfItems, _ := presentationController.GetInt("numitems")
+
+		presentationRequest.PaginationOption = &request.PaginationOption{
+			Index:         index,
+			NumberOfItems: numberOfItems,
+		}
+	}
+
+	sort, _ := presentationController.GetBool("sort")
+
+	if sort {
+		direction, _ := presentationController.GetInt("direction")
+
+		presentationRequest.SortingOption = &request.SortingOption{
+			Direction: direction,
+			Field:     presentationController.GetString("sortby"),
+		}
+	}
+
+	return presentationRequest
 }

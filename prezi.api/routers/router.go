@@ -14,5 +14,5 @@ import (
 )
 
 func init() {
-	beego.Router("/v1/presentation", &controllers.PresentationController{}, "get:Get")
+	beego.Router("/v1/presentations", &controllers.PresentationController{}, "get:Get")
 }
