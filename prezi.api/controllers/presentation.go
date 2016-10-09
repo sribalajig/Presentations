@@ -13,7 +13,16 @@ type PresentationController struct {
 func (presentationController *PresentationController) Get() {
 	presentationService := service.NewPresentationService()
 
-	presentations, _ := presentationService.Get(request.Request{})
+	presentations, _ := presentationService.Get(request.Request{
+		PaginationOption: &request.PaginationOption{
+			Index:         25,
+			NumberOfItems: 35,
+		},
+		SortingOption: &request.SortingOption{
+			Field:     "title",
+			Direction: -1,
+		},
+	})
 
 	presentationController.Data["json"] = presentations
 

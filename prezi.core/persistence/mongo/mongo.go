@@ -1,8 +1,8 @@
 package mongo
 
 import (
+	mgo "gopkg.in/mgo.v2"
 	"infra-balaji-rao/prezi.api.contracts/request"
-	"log"
 	"reflect"
 )
 
@@ -21,8 +21,6 @@ func NewMongo() Mongo {
 }
 
 func (mongo Mongo) Get(typ reflect.Type, request request.Request) interface{} {
-	log.Println("Reached the mongo persistence layer..")
-
 	if typ.Kind() == reflect.Ptr {
 		typ = typ.Elem()
 	}
@@ -31,7 +29,22 @@ func (mongo Mongo) Get(typ reflect.Type, request request.Request) interface{} {
 
 	session := mongo.sessionFactory.Get()
 
-	session.DB("prezi").C(mongo.collectionResolver.Resolve(typ)).Find(nil).All(results)
+	filteredRecords := session.DB("prezi").C(mongo.collectionResolver.Resolve(typ)).Find(nil)
+
+	var sortedRecords, paginatedRecords *mgo.Query
+
+	if request.SortingOption != nil {
+		sortedRecords = filteredRecords.Sort(request.SortingOption.Field)
+		paginatedRecords = sortedRecords.Skip(request.PaginationOption.Index).Limit(request.PaginationOption.NumberOfItems)
+	} else if request.PaginationOption != nil {
+		paginatedRecords = filteredRecords.Skip(request.PaginationOption.Index).Limit(request.PaginationOption.NumberOfItems)
+	} else {
+		paginatedRecords = filteredRecords
+	}
+
+	paginatedRecords.All(results)
+
+	session.Close()
 
 	return results
 }
