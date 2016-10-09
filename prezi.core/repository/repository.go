@@ -1,7 +1,9 @@
 package repository
 
 import (
+	"infra-balaji-rao/prezi.api.contracts/request"
 	"infra-balaji-rao/prezi.core/persistence"
+	"infra-balaji-rao/prezi.core/persistence/mongo"
 	"reflect"
 )
 
@@ -12,12 +14,11 @@ type Repository struct {
 
 func NewRepository(typ reflect.Type) Repository {
 	return Repository{
-		typ: typ,
-		dataAccessLayer: persistence.NewFlatFile(
-			"/Users/balaji/Documents/Go/src/infra-balaji-rao/prezi.core/persistence/presentations.json"),
+		typ:             typ,
+		dataAccessLayer: mongo.NewMongo(),
 	}
 }
 
-func (repository Repository) Get() (interface{}, error) {
-	return repository.dataAccessLayer.Get(repository.typ), nil
+func (repository Repository) Get(request request.Request) (interface{}, error) {
+	return repository.dataAccessLayer.Get(repository.typ, request), nil
 }

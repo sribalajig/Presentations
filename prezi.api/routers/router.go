@@ -31,5 +31,8 @@ func init() {
 			),
 		),
 	)
+
 	beego.AddNamespace(ns)
+
+	beego.Router("/v1/presentation", &controllers.PresentationController{}, "get:Get")
 }

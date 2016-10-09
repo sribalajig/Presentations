@@ -3,6 +3,7 @@ package persistence
 import (
 	"encoding/json"
 	"fmt"
+	"infra-balaji-rao/prezi.api.contracts/request"
 	"io/ioutil"
 	"log"
 	"reflect"
@@ -18,7 +19,7 @@ func NewFlatFile(path string) FlatFile {
 	}
 }
 
-func (flatFile FlatFile) Get(typ reflect.Type) interface{} {
+func (flatFile FlatFile) Get(typ reflect.Type, request request.Request) interface{} {
 	data, _ := ioutil.ReadFile(flatFile.path)
 
 	if typ.Kind() == reflect.Ptr {

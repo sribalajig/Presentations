@@ -90,11 +90,4 @@ func init() {
 			[]string{"get"},
 			nil})
 
-	beego.GlobalControllerRouter["infra-balaji-rao/prezi.api/controllers:PresentationController"] = append(beego.GlobalControllerRouter["infra-balaji-rao/prezi.api/controllers:PresentationController"],
-		beego.ControllerComments{
-			"Get",
-			`/`,
-			[]string{"get"},
-			nil})
-
 }

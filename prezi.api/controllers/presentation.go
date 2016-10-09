@@ -13,7 +13,7 @@ type PresentationController struct {
 func (presentationController *PresentationController) Get() {
 	presentationService := service.NewPresentationService()
 
-	presentations, _ := presentationService.Get(request.PresentationRequest{})
+	presentations, _ := presentationService.Get(request.Request{})
 
 	presentationController.Data["json"] = presentations
 

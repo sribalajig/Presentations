@@ -17,8 +17,8 @@ func NewPresentationService() PresentationService {
 	}
 }
 
-func (presentationService PresentationService) Get(request request.PresentationRequest) (*[]model.Presentation, error) {
-	presentations, nil := presentationService.presentationRepository.Get()
+func (presentationService PresentationService) Get(request request.Request) (*[]model.Presentation, error) {
+	presentations, nil := presentationService.presentationRepository.Get(request)
 
 	return presentations.(*[]model.Presentation), nil
 }
