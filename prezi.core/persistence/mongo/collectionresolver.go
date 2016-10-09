@@ -10,7 +10,7 @@ type CollectionResolver struct {
 }
 
 func (collectionResolver CollectionResolver) Resolve(typ reflect.Type) string {
-	if typ == reflect.TypeOf([]model.Presentation{}) {
+	if typ == reflect.TypeOf(&[]model.Presentation{}) {
 		log.Println("Need to use the presentation collection.")
 
 		return "presentation"

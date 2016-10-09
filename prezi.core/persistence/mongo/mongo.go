@@ -1,8 +1,7 @@
 package mongo
 
 import (
-	mgo "gopkg.in/mgo.v2"
-	"infra-balaji-rao/prezi.api.contracts/request"
+	contracts "infra-balaji-rao/prezi.api.contracts/request"
 	"reflect"
 )
 
@@ -20,31 +19,32 @@ func NewMongo() Mongo {
 	}
 }
 
-func (mongo Mongo) Get(typ reflect.Type, request request.Request) interface{} {
+func (mongo Mongo) Get(typ reflect.Type, request contracts.Request) interface{} {
+	session := mongo.sessionFactory.Get()
+
+	filteredRecords := session.DB("prezi").C(mongo.collectionResolver.Resolve(typ)).Find(nil)
+
+	if request.SortingOption != nil {
+		if request.SortingOption.Direction == contracts.Asc {
+			filteredRecords = filteredRecords.Sort(request.SortingOption.Field)
+		} else if request.SortingOption.Direction == contracts.Desc {
+			filteredRecords = filteredRecords.Sort("-" + request.SortingOption.Field)
+		}
+	}
+
+	if request.PaginationOption != nil {
+		filteredRecords = filteredRecords.Skip(request.PaginationOption.Index).Limit(request.PaginationOption.NumberOfItems)
+	}
+
 	if typ.Kind() == reflect.Ptr {
 		typ = typ.Elem()
 	}
 
 	results := reflect.New(typ).Interface()
 
-	session := mongo.sessionFactory.Get()
+	filteredRecords.All(results)
 
-	filteredRecords := session.DB("prezi").C(mongo.collectionResolver.Resolve(typ)).Find(nil)
-
-	var sortedRecords, paginatedRecords *mgo.Query
-
-	if request.SortingOption != nil {
-		sortedRecords = filteredRecords.Sort(request.SortingOption.Field)
-		paginatedRecords = sortedRecords.Skip(request.PaginationOption.Index).Limit(request.PaginationOption.NumberOfItems)
-	} else if request.PaginationOption != nil {
-		paginatedRecords = filteredRecords.Skip(request.PaginationOption.Index).Limit(request.PaginationOption.NumberOfItems)
-	} else {
-		paginatedRecords = filteredRecords
-	}
-
-	paginatedRecords.All(results)
-
-	session.Close()
+	defer session.Close()
 
 	return results
 }

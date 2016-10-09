@@ -20,7 +20,7 @@ func (presentationController *PresentationController) Get() {
 		},
 		SortingOption: &request.SortingOption{
 			Field:     "title",
-			Direction: -1,
+			Direction: request.Asc,
 		},
 	})
 
