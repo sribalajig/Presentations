@@ -1,12 +1,12 @@
 package model
 
 import (
-	"time"
+//"time"
 )
 
 type Presentation struct {
 	Id        string
 	Title     string
 	ThumbNail string
-	CreatedAt time.Time
+	CreatedAt string
 }

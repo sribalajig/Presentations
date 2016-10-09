@@ -1,9 +1,11 @@
 package persistence
 
 import (
-	"infra-balaji-rao/prezi.core/model"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
 	"reflect"
-	"time"
 )
 
 type FlatFile struct {
@@ -16,13 +18,22 @@ func NewFlatFile(path string) FlatFile {
 	}
 }
 
-func (flatFile FlatFile) Get(t reflect.Type) interface{} {
-	return []model.Presentation{
-		model.Presentation{
-			Id:        "56f137f432fbb67217182785",
-			Title:     "incididunt amet ad nostrud",
-			ThumbNail: "https://placeimg.com/400/400/any",
-			CreatedAt: time.Now(),
-		},
+func (flatFile FlatFile) Get(typ reflect.Type) interface{} {
+	data, _ := ioutil.ReadFile(flatFile.path)
+
+	if typ.Kind() == reflect.Ptr {
+		typ = typ.Elem()
 	}
+
+	payload := reflect.New(typ).Interface()
+
+	if err := json.Unmarshal(data, payload); err != nil {
+		log.Println("Error unmarshalling json : " + err.Error())
+
+		return nil
+	} else {
+		log.Println(fmt.Sprintf("This is the unmarshalled data %q", payload))
+	}
+
+	return payload
 }

@@ -17,9 +17,7 @@ func NewPresentationRepository() PresentationRepository {
 	}
 }
 
-func (presentationRepository PresentationRepository) Get() ([]model.Presentation, error) {
-	presentations := presentationRepository.dataAccessLayer.Get(
-		reflect.TypeOf(model.Presentation{})).([]model.Presentation)
-
-	return presentations, nil
+func (presentationRepository PresentationRepository) Get() (*[]model.Presentation, error) {
+	return presentationRepository.dataAccessLayer.Get(
+		reflect.TypeOf(&[]model.Presentation{})).(*[]model.Presentation), nil
 }

@@ -16,7 +16,7 @@ func NewPresentationService() PresentationService {
 	}
 }
 
-func (presentationService PresentationService) Get(request request.PresentationRequest) ([]model.Presentation, error) {
+func (presentationService PresentationService) Get(request request.PresentationRequest) (*[]model.Presentation, error) {
 	presentations, _ := presentationService.presentationRepository.Get()
 
 	return presentations, nil
