@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 	"infra-balaji-rao/prezi.api.contracts/request"
+	"infra-balaji-rao/prezi.api.contracts/response"
 	"infra-balaji-rao/prezi.core/service"
 )
 
@@ -14,7 +15,11 @@ func (presentationController *PresentationController) Get() {
 	presentations, _ := service.NewPresentationService().Get(
 		presentationController.generateRequest())
 
-	presentationController.Data["json"] = presentations
+	presentationController.Data["json"] = response.PaginatedResponse{
+		Results:      presentations,
+		TotalRecords: 100,
+		TotalPages:   10,
+	}
 
 	presentationController.ServeJSON()
 }
