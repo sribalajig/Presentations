@@ -17,10 +17,10 @@ func NewPresentationService() PresentationService {
 	}
 }
 
-func (presentationService PresentationService) Get(request request.Request) (*[]model.Presentation, error) {
-	presentations, nil := presentationService.presentationRepository.Get(request)
+func (presentationService PresentationService) Get(request request.Request) *[]model.Presentation {
+	presentations, _ := presentationService.presentationRepository.Get(request)
 
-	return presentations.(*[]model.Presentation), nil
+	return presentations.(*[]model.Presentation)
 }
 
 func (presentationService PresentationService) Count(request request.Request) int {

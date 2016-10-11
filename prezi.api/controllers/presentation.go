@@ -16,7 +16,6 @@ func (presentationController *PresentationController) Get() {
 	request := presentationController.generateRequest()
 	service := serviceLayer.NewPresentationService()
 
-	presentations, _ := service.Get(request)
 	count := service.Count(request)
 	numberOfItems := count
 
@@ -25,7 +24,7 @@ func (presentationController *PresentationController) Get() {
 	}
 
 	presentationController.Data["json"] = response.PaginatedResponse{
-		Results:      presentations,
+		Results:      service.Get(request),
 		TotalRecords: count,
 		TotalPages:   count / numberOfItems,
 	}
@@ -52,7 +51,11 @@ func (presentationController *PresentationController) generateRequest() request.
 	sort, _ := presentationController.GetBool("sort")
 
 	if sort {
-		direction, _ := presentationController.GetInt("direction")
+		direction := request.Asc
+
+		if presentationController.GetString("direction") == "desc" {
+			direction = request.Desc
+		}
 
 		presentationRequest.SortingOption = &request.SortingOption{
 			Direction: direction,

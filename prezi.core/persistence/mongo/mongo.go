@@ -2,7 +2,6 @@ package mongo
 
 import (
 	contracts "infra-balaji-rao/prezi.api.contracts/request"
-	"log"
 	"reflect"
 )
 
