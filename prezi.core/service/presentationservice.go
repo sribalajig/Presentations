@@ -22,3 +22,7 @@ func (presentationService PresentationService) Get(request request.Request) (*[]
 
 	return presentations.(*[]model.Presentation), nil
 }
+
+func (presentationService PresentationService) Count(request request.Request) int {
+	return presentationService.presentationRepository.Count(request)
+}

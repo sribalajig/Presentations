@@ -16,10 +16,5 @@ func (collectionResolver CollectionResolver) Resolve(typ reflect.Type) string {
 		return "presentation"
 	}
 
-	log.Println(typ)
-	log.Println(model.Presentation{})
-
-	log.Println("Need to use the default collection.")
-
 	return ""
 }

@@ -2,6 +2,7 @@ package mongo
 
 import (
 	contracts "infra-balaji-rao/prezi.api.contracts/request"
+	"log"
 	"reflect"
 )
 
@@ -47,4 +48,12 @@ func (mongo Mongo) Get(typ reflect.Type, request contracts.Request) interface{} 
 	defer session.Close()
 
 	return results
+}
+
+func (mongo Mongo) Count(typ reflect.Type, request contracts.Request) int {
+	session := mongo.sessionFactory.Get()
+
+	count, _ := session.DB("prezi").C(mongo.collectionResolver.Resolve(typ)).Find(nil).Count()
+
+	return count
 }

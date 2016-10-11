@@ -7,4 +7,5 @@ import (
 
 type DataAccessLayer interface {
 	Get(t reflect.Type, request request.Request) interface{}
+	Count(t reflect.Type, request request.Request) int
 }

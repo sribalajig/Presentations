@@ -37,7 +37,7 @@
       url: "http://localhost:8092/v1/presentations",
       state: {
           pageSize: 10,
-          sortKey: "title",
+          sortKey: "createdAt",
           order: 1
       },
 
@@ -47,10 +47,11 @@
           sortKey: "sort",
           pageSize: "numitems",
           currentPage: "index",
-          sortKey: "sortBy",
+          sortKey: "sortby",
           order: "direction",
           directions: { "0": "asc", "1": "desc" },
-          paginate: true
+          paginate: true,
+          sort: true
       },
 
       parseState: function(resp, queryParams, state, options) {
@@ -70,9 +71,16 @@
       columns: [{ 
           name: "title",
           cell: "string",
-          sortable: false,
-          editable: false,
-          sort: false
+          label: "Title",
+          sortable: true,
+          editable: false
+      },
+      { 
+          name: "createdAt",
+          label: "Created At",
+          cell: "string",
+          sortable: true,
+          editable: false
       }],
 
       collection: presentations

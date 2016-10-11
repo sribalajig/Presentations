@@ -22,3 +22,7 @@ func NewRepository(typ reflect.Type) Repository {
 func (repository Repository) Get(request request.Request) (interface{}, error) {
 	return repository.dataAccessLayer.Get(repository.typ, request), nil
 }
+
+func (repository Repository) Count(request request.Request) int {
+	return repository.dataAccessLayer.Count(repository.typ, request)
+}

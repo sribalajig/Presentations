@@ -4,26 +4,36 @@ import (
 	"github.com/astaxie/beego"
 	"infra-balaji-rao/prezi.api.contracts/request"
 	"infra-balaji-rao/prezi.api.contracts/response"
-	"infra-balaji-rao/prezi.core/service"
+	serviceLayer "infra-balaji-rao/prezi.core/service"
 )
 
 type PresentationController struct {
 	beego.Controller
 }
 
+/*Get returns presentations based on the filters & options*/
 func (presentationController *PresentationController) Get() {
-	presentations, _ := service.NewPresentationService().Get(
-		presentationController.generateRequest())
+	request := presentationController.generateRequest()
+	service := serviceLayer.NewPresentationService()
+
+	presentations, _ := service.Get(request)
+	count := service.Count(request)
+	numberOfItems := count
+
+	if request.PaginationOption != nil {
+		numberOfItems = request.PaginationOption.NumberOfItems
+	}
 
 	presentationController.Data["json"] = response.PaginatedResponse{
 		Results:      presentations,
-		TotalRecords: 100,
-		TotalPages:   10,
+		TotalRecords: count,
+		TotalPages:   count / numberOfItems,
 	}
 
 	presentationController.ServeJSON()
 }
 
+/*generateRequest() parses the HTTP request for the relevant params*/
 func (presentationController *PresentationController) generateRequest() request.Request {
 	presentationRequest := request.Request{}
 
