@@ -67,7 +67,7 @@
          search : function(letters){
            if(letters == "") return this;
          
-           this.fetch({ data: { title: '*' + letters + '*'} });
+           this.fetch({ data: { filter: 'title_' + letters, paginate : true}});
          }
          });
          

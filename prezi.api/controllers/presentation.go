@@ -5,6 +5,7 @@ import (
 	"infra-balaji-rao/prezi.api.contracts/request"
 	"infra-balaji-rao/prezi.api.contracts/response"
 	serviceLayer "infra-balaji-rao/prezi.core/service"
+	"strings"
 )
 
 type PresentationController struct {
@@ -60,6 +61,18 @@ func (presentationController *PresentationController) generateRequest() request.
 		presentationRequest.SortingOption = &request.SortingOption{
 			Direction: direction,
 			Field:     presentationController.GetString("sortby"),
+		}
+	}
+
+	/*filter="title:*text*"*/
+	if presentationController.GetString("filter") != "" {
+		filterValue := presentationController.GetString("filter")
+
+		presentationRequest.Filters = &[]request.Filter{
+			request.Filter{
+				Name:  strings.Split(filterValue, "_")[0],
+				Value: strings.Split(filterValue, "_")[1],
+			},
 		}
 	}
 

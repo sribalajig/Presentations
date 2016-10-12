@@ -1,6 +1,8 @@
 package mongo
 
 import (
+	mgo "gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	contracts "infra-balaji-rao/prezi.api.contracts/request"
 	"reflect"
 )
@@ -22,7 +24,18 @@ func NewMongo() Mongo {
 func (mongo Mongo) Get(typ reflect.Type, request contracts.Request) interface{} {
 	session := mongo.sessionFactory.Get()
 
-	filteredRecords := session.DB("prezi").C(mongo.collectionResolver.Resolve(typ)).Find(nil)
+	collection := session.DB("prezi").C(mongo.collectionResolver.Resolve(typ))
+
+	var filteredRecords *mgo.Query
+
+	if request.Filters != nil {
+		filterRegex := (*request.Filters)[0].Value.(string)
+
+		filteredRecords = collection.Find(
+			bson.M{(*request.Filters)[0].Name: bson.RegEx{".*" + filterRegex + ".*", "i"}})
+	} else {
+		filteredRecords = collection.Find(nil)
+	}
 
 	if request.SortingOption != nil {
 		if request.SortingOption.Direction == contracts.Asc {
