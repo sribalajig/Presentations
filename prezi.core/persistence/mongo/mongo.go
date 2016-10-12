@@ -67,7 +67,19 @@ func (mongo Mongo) Get(typ reflect.Type, request contracts.Request) interface{} 
 func (mongo Mongo) Count(typ reflect.Type, request contracts.Request) int {
 	session := mongo.sessionFactory.Get()
 
-	count, _ := session.DB("prezi").C(mongo.collectionResolver.Resolve(typ)).Find(nil).Count()
+	var filteredRecords *mgo.Query
+	collection := session.DB("prezi").C(mongo.collectionResolver.Resolve(typ))
+
+	if request.Filters != nil {
+		filterRegex := (*request.Filters)[0].Value.(string)
+
+		filteredRecords = collection.Find(
+			bson.M{(*request.Filters)[0].Name: bson.RegEx{".*" + filterRegex + ".*", "i"}})
+	} else {
+		filteredRecords = collection.Find(nil)
+	}
+
+	count, _ := filteredRecords.Count()
 
 	return count
 }

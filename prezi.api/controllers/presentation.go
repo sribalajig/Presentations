@@ -64,7 +64,7 @@ func (presentationController *PresentationController) generateRequest() request.
 		}
 	}
 
-	/*filter="title:*text*"*/
+	/*filter="title_*text*"*/
 	if presentationController.GetString("filter") != "" {
 		filterValue := presentationController.GetString("filter")
 
