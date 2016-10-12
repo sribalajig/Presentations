@@ -46,7 +46,9 @@ func (mongo Mongo) Get(typ reflect.Type, request contracts.Request) interface{} 
 	}
 
 	if request.PaginationOption != nil {
-		filteredRecords = filteredRecords.Skip(request.PaginationOption.Index).Limit(request.PaginationOption.NumberOfItems)
+		filteredRecords = filteredRecords.Skip(
+			(request.PaginationOption.Index - 1) * request.PaginationOption.NumberOfItems).Limit(
+			request.PaginationOption.NumberOfItems)
 	}
 
 	if typ.Kind() == reflect.Ptr {

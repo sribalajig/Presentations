@@ -65,9 +65,10 @@
          },
          
          search : function(letters){
-           if(letters == "") return this;
-         
-           this.fetch({ data: { filter: 'title_' + letters, paginate : true}});
+
+           this.state.currentPage = 1
+
+           this.fetch({ data: { filter: 'title_' + letters, paginate : true, sort: true}});
          }
          });
          
