@@ -8,6 +8,8 @@
       <link rel="stylesheet" href="static/css/backgrid.css" />
       <link rel="stylesheet" href="static/css/backgrid-paginator.css" />
       <link rel="stylesheet" href="static/css/backgrid-text-cell.css" />
+      <link rel="stylesheet" href="static/css/search.css" />
+      <link rel="stylesheet" href="static/css/backgrid-moment-cell.min.css" />
    </head>
    <body>
       <div id="main">
@@ -21,7 +23,21 @@
             </div>
          </div>
       <script id="search-tmpl" type="text/template">
-        <input id="search" type="text" value="">
+        <div class="container">
+    <div class="row">
+      <h2>Your Prezi's</h2>
+             <div id="custom-search-input">
+                              <div class="input-group col-md-12">
+                                  <input id="search" type="text" class="  search-query form-control" placeholder="Title" />
+                                  <span class="input-group-btn">
+                                      <button class="btn btn-danger" type="button">
+                                          <span class=" glyphicon glyphicon-search"></span>
+                                      </button>
+                                  </span>
+                              </div>
+                          </div>
+    </div>
+  </div>
       </script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
@@ -31,6 +47,8 @@
       <script src="static/js/lib/bootstrap.js"></script>
       <script src="static/js/lib/backgrid-paginator.js"></script>
       <script src="static/js/lib/backgrid-text-cell.js"></script>
+      <script src="static/js/lib/moment.min.js"></script>
+      <script src="static/js/lib/backgrid-moment-cell.min.js"></script>
       <script type="text/javascript">
          var Presentations = Backbone.PageableCollection.extend({
          
@@ -87,7 +105,10 @@
          { 
              name: "createdAt",
              label: "Created At",
-             cell: "string",
+             cell: Backgrid.Extension.MomentCell.extend({
+             modelFormat: "YYYY/M/D",
+             displayLang: "zh-tw",
+             displayFormat: "MMM DD, YYYY"}),
              sortable: true,
              editable: false
          }],
