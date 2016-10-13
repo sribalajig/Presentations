@@ -103,6 +103,13 @@
              editable: false
          },
          { 
+             name: "creator.name",
+             cell: "uri",
+             label: "Creator",
+             sortable: true,
+             editable: false
+         },
+         { 
              name: "createdAt",
              label: "Created At",
              cell: Backgrid.Extension.MomentCell.extend({
@@ -111,7 +118,8 @@
              displayFormat: "MMM DD, YYYY"}),
              sortable: true,
              editable: false
-         }],
+         }
+         ],
          
          collection: presentations
          });
@@ -147,6 +155,19 @@
          presentations.fetch({
             reset: true
          });
+
+         (function(_, Backbone) {
+    _.extend(Backbone.Model.prototype, {
+        get: function(key) {
+            return _.reduce(key.split('.'), function(attr, key) {
+                if (attr instanceof Backbone.Model)
+                    return attr.attributes[key];
+
+                return attr[key];
+            }, this.attributes);
+        }
+    });
+})(window._, window.Backbone);
       </script>>
    </body>
 </html>
